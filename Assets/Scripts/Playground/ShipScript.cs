@@ -77,7 +77,7 @@ namespace BattleshipBoardGame
                     result = false;
                     fitInField = false;
                     WrongPlaysmentIndicators[i].gameObject.SetActive(true);
-                    Debug.Log($"coordinateShift {coordinateShift} __ centerPlace {centerPlace} __ i {i}");                    
+                    //Debug.Log($"coordinateShift {coordinateShift} __ centerPlace {centerPlace} __ i {i}");                    
                 }
 
                 if (coordinateShift.y < 0 || coordinateShift.y >= occupiedPlaces.Length)
@@ -85,7 +85,7 @@ namespace BattleshipBoardGame
                     result = false;
                     fitInField = false;
                     WrongPlaysmentIndicators[i].gameObject.SetActive(true);
-                    Debug.Log($"coordinateShift {coordinateShift} __ centerPlace {centerPlace} __ i {i}");
+                    //Debug.Log($"coordinateShift {coordinateShift} __ centerPlace {centerPlace} __ i {i}");
                 }
 
                 if (fitInField == true)
