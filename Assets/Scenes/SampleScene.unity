@@ -8016,7 +8016,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playgroundTilesRoot: {fileID: 1498944769}
   PlaygroundAncor: {fileID: 48921602}
-  testShip: {fileID: 3493695082014563345, guid: 5dd31d5cc3d6d724e9c4df68c0fe8a9a, type: 3}
+  testShip: {fileID: 4859248838909385748, guid: 1c022e8b61cc94c4bb765e6194d34327, type: 3}
 --- !u!1 &510734959
 GameObject:
   m_ObjectHideFlags: 0
