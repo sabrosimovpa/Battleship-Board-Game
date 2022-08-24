@@ -1,17 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BattleshipBoardGame.UI.Base;
 
 namespace BattleshipBoardGame.UI
 {
-    public class MainMenuUI : MonoBehaviour
+    public class MainMenuNavigation : MonoBehaviour
     {
         [SerializeField]
-        private RectTransform startMenu;
+        private BaseMenuItem startMenu;
         [SerializeField]
-        private RectTransform[] menuObjects;
+        private BaseMenuItem[] menuObjects;
 
-        private Stack<RectTransform> _navigationStack = new Stack<RectTransform>();
+        private Stack<BaseMenuItem> _navigationStack = new Stack<BaseMenuItem>();
 
         // Start is called before the first frame update
         void Start()
@@ -24,14 +25,14 @@ namespace BattleshipBoardGame.UI
             NavigateTo(startMenu);
         }
 
-        public void NavigateTo(RectTransform newMenuObject)
+        public void NavigateTo(BaseMenuItem newMenuObject)
         {
             if(_navigationStack.Count > 0)
             {
-                _navigationStack.Peek().gameObject.SetActive(false);
+                _navigationStack.Peek().OnMenuUnload();
             }
 
-            newMenuObject.gameObject.SetActive(true);
+            newMenuObject.OnMenuLoad();
             _navigationStack.Push(newMenuObject);
         }
 
@@ -40,8 +41,8 @@ namespace BattleshipBoardGame.UI
             if(_navigationStack.Count > 1)
             {
                 var current = _navigationStack.Pop();
-                current.gameObject.SetActive(false);
-                _navigationStack.Pop().gameObject.SetActive(true);
+                current.OnMenuUnload();
+                _navigationStack.Pop().OnMenuLoad();
             }
             else
             {
@@ -53,14 +54,14 @@ namespace BattleshipBoardGame.UI
         { 
             if(_navigationStack.Count > 0)
             {
-                _navigationStack.Pop().gameObject.SetActive(false);
+                _navigationStack.Pop().OnMenuUnload();
             }
 
             _navigationStack.Clear();
 #if UNITY_EDITOR
             NavigateTo(startMenu);
 #endif
-            Application.Quit();
+            GameManager.instance.ExitGame();
         }
     }
 }

@@ -60,11 +60,18 @@ namespace BattleshipBoardGame
             }
         }
 
+        private bool canHandleClick = false;
+
+
         // Update is called once per frame
         void Update()
         {
+
+
             if (Input.GetMouseButtonDown(0))
             {
+                if (!CanDoInputAction()) return;
+                
                 switch (gameFieldState)
                 {
                     case GameFieldState.PlasingShips:
@@ -83,6 +90,8 @@ namespace BattleshipBoardGame
 
             if (Input.GetMouseButtonDown(1))
             {
+                if (!CanDoInputAction()) return;
+
                 switch (gameFieldState)
                 {
                     case GameFieldState.PlasingShips:
@@ -100,6 +109,21 @@ namespace BattleshipBoardGame
             }
         }
 
+        private bool CanDoInputAction()
+        {
+            var result = false;
+
+            var mousePosition = Input.mousePosition;
+            var screenPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+
+            var curPosition = gameObject.transform.position;
+
+            result = Mathf.Abs(screenPosition.x - curPosition.x) <= 5 &&
+                     Mathf.Abs(screenPosition.z - curPosition.z) <=5 ;
+
+            return result;
+        }
+
         private Action onPlaysingFinished;
 
         public void StartShipPlasing(GameObject shipPrefub, Action onPlaysingFinished)
@@ -115,6 +139,7 @@ namespace BattleshipBoardGame
             PlaysingShip = Instantiate(shipPrefub);
             PlaysingShip.transform.parent = PlaygroundAncor.transform;
             PlaysingShip.transform.localPosition = new Vector3(10, 0.1f, -4);
+            TileHoverChangedEvent.RemoveAllListeners();
             TileHoverChangedEvent.AddListener(TryFitHere);
         }
 
@@ -143,6 +168,7 @@ namespace BattleshipBoardGame
                 PlaysingShip.GetComponent<ShipScript>().OcupadePlace(lastHoweredTile.Position, placesOccupiedByShips);
                 PlaysingShip = null;
                 gameFieldState = GameFieldState.None;
+                TileHoverChangedEvent.RemoveAllListeners();
                 onPlaysingFinished?.Invoke();
             }
         }
