@@ -45,6 +45,8 @@ namespace BattleshipBoardGame
             }
         }
 
+        public int TotalSize => totalSize;
+
         public bool IsAlive
         {
             get

@@ -19,12 +19,12 @@ namespace BattleshipBoardGame
         [SerializeField]
         private GameObject DestrooyedEnemyShipPartIndicator;
 
-        private GameObject PlaysingShip;
+        private GameObject playsingShip;
 
         private GameFieldState gameFieldState = GameFieldState.None;
 
-        private UnityEvent<PlaygroundTile> TileHoverChangedEvent = new UnityEvent<PlaygroundTile>();
-        private PlaygroundTile lastHoweredTile;
+        private UnityEvent<Vector2Int> TileHoverChangedEvent = new UnityEvent<Vector2Int>();
+        private Vector2Int lastHoweredTilePosition;
 
         private ShipScript[][] placesOccupiedByShips = new ShipScript[10][];
         private ShootingPin[][] shootedPlayses = new ShootingPin[10][];
@@ -32,6 +32,10 @@ namespace BattleshipBoardGame
         private int liveShipOnField;
 
         public int LiveShipOnField => liveShipOnField;
+
+        public bool IsEnioneStanding => liveShipOnField > 0;
+
+        public ShootingPin[][] ShootedPlayses => shootedPlayses;
 
         // Start is called before the first frame update
         void Start()
@@ -49,12 +53,9 @@ namespace BattleshipBoardGame
         {
             if(eventType == PlaygroundTile.TileEventType.MouseEnter)
             {
-                TileHoverChangedEvent?.Invoke(tile);
+                TileHoverChangedEvent?.Invoke(tile.Position);
             }
         }
-
-        private bool canHandleClick = false;
-
 
         // Update is called once per frame
         void Update()
@@ -121,51 +122,67 @@ namespace BattleshipBoardGame
 
         public void StartShipPlasing(GameObject shipPrefub, Action onPlaysingFinished)
         {
-            lastHoweredTile = null;
+            lastHoweredTilePosition = Vector2Int.zero;
             this.onPlaysingFinished = onPlaysingFinished;
             gameFieldState = GameFieldState.PlasingShips;
-            if (PlaysingShip != null)
+            if (playsingShip != null)
             {
-                Destroy(PlaysingShip);
-                PlaysingShip = null;
+                Destroy(playsingShip);
+                playsingShip = null;
             }
-            PlaysingShip = Instantiate(shipPrefub);
-            PlaysingShip.transform.parent = PlaygroundAncor.transform;
-            PlaysingShip.transform.localPosition = new Vector3(10, 0.1f, -4);
+            playsingShip = Instantiate(shipPrefub);
+            playsingShip.transform.parent = PlaygroundAncor.transform;
+            playsingShip.transform.localPosition = new Vector3(10, 0.1f, -4);
             TileHoverChangedEvent.RemoveAllListeners();
-            TileHoverChangedEvent.AddListener(TryFitHere);
+            TileHoverChangedEvent.AddListener(SignalFitOnPositionChanged);
         }
 
-        private void TryFitHere(PlaygroundTile tile)
+        private void SignalFitOnPositionChanged(Vector2Int tilePosition)
         {
-            lastHoweredTile = tile;
-            PlaysingShip.GetComponent<ShipScript>().IsShipFitt(placesOccupiedByShips, tile.Position);
-            PlaysingShip.transform.localPosition = new Vector3(tile.Position.x, 0.1f, -tile.Position.y);
+            lastHoweredTilePosition = tilePosition;
+            playsingShip.GetComponent<ShipScript>().IsShipFitt(placesOccupiedByShips, lastHoweredTilePosition);
+            playsingShip.transform.localPosition = new Vector3(lastHoweredTilePosition.x, 0.1f, -lastHoweredTilePosition.y);
         }
 
         private void RotateShip()
         {
-            if (PlaysingShip != null)
+            if (playsingShip != null)
             {
-                PlaysingShip.GetComponent<ShipScript>().Rotate();
-                PlaysingShip.GetComponent<ShipScript>().IsShipFitt(placesOccupiedByShips, lastHoweredTile.Position);
+                playsingShip.GetComponent<ShipScript>().Rotate();
+                playsingShip.GetComponent<ShipScript>().IsShipFitt(placesOccupiedByShips, lastHoweredTilePosition);
             }
         }
 
         private void PlaceShip()
         {
-            if(PlaysingShip.GetComponent<ShipScript>().IsShipFitt(placesOccupiedByShips, lastHoweredTile.Position))
+            if(playsingShip.GetComponent<ShipScript>().IsShipFitt(placesOccupiedByShips, lastHoweredTilePosition))
             {
                 //TodoStoresShip Coordinates and occupation places
-                PlaysingShip.transform.localPosition = new Vector3(lastHoweredTile.Position.x, 0, -lastHoweredTile.Position.y);
-                PlaysingShip.GetComponent<ShipScript>().OcupadePlace(lastHoweredTile.Position, placesOccupiedByShips);
-                ShipsOnField.Add(PlaysingShip.GetComponent<ShipScript>());
+                playsingShip.transform.localPosition = new Vector3(lastHoweredTilePosition.x, 0, -lastHoweredTilePosition.y);
+                playsingShip.GetComponent<ShipScript>().OcupadePlace(lastHoweredTilePosition, placesOccupiedByShips);
+                ShipsOnField.Add(playsingShip.GetComponent<ShipScript>());
                 liveShipOnField++;
                 gameFieldState = GameFieldState.None;
                 TileHoverChangedEvent.RemoveAllListeners();
-                PlaysingShip = null;
+                playsingShip = null;
                 onPlaysingFinished?.Invoke();
             }
+        }
+
+        public void RotatePlaysingShip()
+        {
+            RotateShip();
+        }
+
+        public bool TryToFitShipOnPosition(Vector2Int newPosition)
+        {
+            lastHoweredTilePosition = newPosition;
+            return playsingShip.GetComponent<ShipScript>().IsShipFitt(placesOccupiedByShips, lastHoweredTilePosition);
+        }
+
+        public void PlaceShipOnLastPlace()
+        {
+            PlaceShip();
         }
         #endregion
 
@@ -193,16 +210,15 @@ namespace BattleshipBoardGame
             currentShoot.ChangePinState(ShootingPin.ShootingPinState.Plasing);
         }
 
-        private void ShootTraker(PlaygroundTile hoveredTile)
+        private void ShootTraker(Vector2Int hoveredTile)
         {
-            lastHoweredTile = hoveredTile;
+            lastHoweredTilePosition = hoveredTile;
             PlaceShoot(true);
         }
 
         private void PlaceShoot(bool checkOnly = false)
-        {
-            var normalizedVector = new Vector2Int(Mathf.RoundToInt(lastHoweredTile.Position.x), Mathf.RoundToInt(lastHoweredTile.Position.y));
-            var pinInPlace = shootedPlayses[normalizedVector.x][normalizedVector.y];
+        {            
+            var pinInPlace = shootedPlayses[lastHoweredTilePosition.x][lastHoweredTilePosition.y];
             if (pinInPlace == null)
             {
                 currentShoot.ChangePinState(ShootingPin.ShootingPinState.Plasing);
@@ -212,19 +228,25 @@ namespace BattleshipBoardGame
                 currentShoot.ChangePinState(ShootingPin.ShootingPinState.WrongPosition);
             }
 
-            currentShoot.gameObject.transform.localPosition = new Vector3(normalizedVector.x, 0, -normalizedVector.y);
+            currentShoot.gameObject.transform.localPosition = new Vector3(lastHoweredTilePosition.x, 0, -lastHoweredTilePosition.y);
 
             if (checkOnly) return;
 
             if(currentShoot.CurrentState == ShootingPin.ShootingPinState.Plasing)
             {
-                shootedPlayses[normalizedVector.x][normalizedVector.y] = currentShoot;
+                shootedPlayses[lastHoweredTilePosition.x][lastHoweredTilePosition.y] = currentShoot;
                 TileHoverChangedEvent.RemoveAllListeners();
                 gameFieldState = GameFieldState.None;
                 currentShoot = null;
-                playerShootsCallback?.Invoke(new Vector2Int[] { normalizedVector });
+                playerShootsCallback?.Invoke(new Vector2Int[] { lastHoweredTilePosition });
             }
-        }        
+        }
+
+        public void PlaceShootOn(Vector2Int position)
+        {
+            lastHoweredTilePosition = position;
+            PlaceShoot(false);
+        }
 
         public void ApplyHitResult(IList<ShootResult> results)
         {

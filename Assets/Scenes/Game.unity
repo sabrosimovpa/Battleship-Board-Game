@@ -918,10 +918,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f588134d764b62c4cb125ff55313f5dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameFieldPrefub: {fileID: 6801368217362129544, guid: 77aa7cdd5a154404d842f1f92493151a, type: 3}
-  PlayerRoot: {fileID: 239371541}
-  OponentRoot: {fileID: 1249633226}
-  UserUi: {fileID: 160922622}
+  gameFieldPrefub: {fileID: 6801368217362129544, guid: 77aa7cdd5a154404d842f1f92493151a, type: 3}
+  playerRoot: {fileID: 239371541}
+  oponentRoot: {fileID: 1249633226}
+  userUi: {fileID: 160922622}
+  shipsForAI:
+  - {fileID: 3493695082014563345, guid: 5dd31d5cc3d6d724e9c4df68c0fe8a9a, type: 3}
+  - {fileID: 3803519846715292441, guid: c386a3d0c3f46c94c8788e534d144326, type: 3}
+  - {fileID: 3710010469076070931, guid: 7595903add028eb4eb03943ea2cbe478, type: 3}
+  - {fileID: 4595371267421936909, guid: c9aa963ac479cd6439d073904a5715ab, type: 3}
+  - {fileID: 4859248838909385748, guid: 1c022e8b61cc94c4bb765e6194d34327, type: 3}
 --- !u!1 &1330500750
 GameObject:
   m_ObjectHideFlags: 0
