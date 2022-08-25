@@ -8,14 +8,16 @@ namespace BattleshipBoardGame
 {
     public class GameFieldManager : MonoBehaviour
     {
+
         [SerializeField]
         private GameObject playgroundTilesRoot;
         [SerializeField]
         private GameObject PlaygroundAncor;
-
+        [SerializeField]
+        private GameObject ShootingPinPrefub;
 
         [SerializeField]
-        private GameObject testShip;
+        private GameObject DestrooyedEnemyShipPartIndicator;
 
         private GameObject PlaysingShip;
 
@@ -25,30 +27,21 @@ namespace BattleshipBoardGame
         private PlaygroundTile lastHoweredTile;
 
         private ShipScript[][] placesOccupiedByShips = new ShipScript[10][];
+        private ShootingPin[][] shootedPlayses = new ShootingPin[10][];
         private List<ShipScript> ShipsOnField = new List<ShipScript>();
+        private int liveShipOnField;
+
+        public int LiveShipOnField => liveShipOnField;
 
         // Start is called before the first frame update
         void Start()
         {
-            ResetPlaceOccupiedByShip();
+            ResetPlaces();
             var tiles = playgroundTilesRoot.GetComponentsInChildren<PlaygroundTile>();
 
             for (int i = 0; i < tiles.Length; i++)
             {
                 tiles[i].TileMouseEvent.AddListener(OnTileMouseEventHandler);
-            }
-
-            if (testShip != null)
-            {
-                StartShipPlasing(testShip, StartTestPl);
-            }
-        }
-
-        private void StartTestPl()
-        {
-            if (testShip != null)
-            {
-                StartShipPlasing(testShip, StartTestPl);
             }
         }
 
@@ -67,7 +60,6 @@ namespace BattleshipBoardGame
         void Update()
         {
 
-
             if (Input.GetMouseButtonDown(0))
             {
                 if (!CanDoInputAction()) return;
@@ -78,6 +70,7 @@ namespace BattleshipBoardGame
                         PlaceShip();
                         break;
                     case GameFieldState.WaytForShoot:
+                        PlaceShoot();
                         break;
                     case GameFieldState.WaytForReply:
                         break;
@@ -123,7 +116,7 @@ namespace BattleshipBoardGame
 
             return result;
         }
-
+        #region plaseShipOnField
         private Action onPlaysingFinished;
 
         public void StartShipPlasing(GameObject shipPrefub, Action onPlaysingFinished)
@@ -166,14 +159,135 @@ namespace BattleshipBoardGame
                 //TodoStoresShip Coordinates and occupation places
                 PlaysingShip.transform.localPosition = new Vector3(lastHoweredTile.Position.x, 0, -lastHoweredTile.Position.y);
                 PlaysingShip.GetComponent<ShipScript>().OcupadePlace(lastHoweredTile.Position, placesOccupiedByShips);
-                PlaysingShip = null;
+                ShipsOnField.Add(PlaysingShip.GetComponent<ShipScript>());
+                liveShipOnField++;
                 gameFieldState = GameFieldState.None;
                 TileHoverChangedEvent.RemoveAllListeners();
+                PlaysingShip = null;
                 onPlaysingFinished?.Invoke();
             }
         }
+        #endregion
 
-        private void ResetPlaceOccupiedByShip()
+        #region shootingState
+
+        private Action<Vector2Int[]> playerShootsCallback;
+        private ShootingPin currentShoot;
+
+        public void StartShooting(Action<Vector2Int[]> callback)
+        {
+            playerShootsCallback = callback;
+            gameFieldState = GameFieldState.WaytForShoot;
+
+            if(currentShoot != null)
+            {
+                Destroy(currentShoot.gameObject);
+                currentShoot = null;
+            }
+
+            currentShoot = Instantiate(ShootingPinPrefub).GetComponent<ShootingPin>();
+            currentShoot.gameObject.transform.parent = PlaygroundAncor.transform;
+            currentShoot.transform.localPosition = new Vector3(10, 0, -4);
+            TileHoverChangedEvent.RemoveAllListeners();
+            TileHoverChangedEvent.AddListener(ShootTraker);
+            currentShoot.ChangePinState(ShootingPin.ShootingPinState.Plasing);
+        }
+
+        private void ShootTraker(PlaygroundTile hoveredTile)
+        {
+            lastHoweredTile = hoveredTile;
+            PlaceShoot(true);
+        }
+
+        private void PlaceShoot(bool checkOnly = false)
+        {
+            var normalizedVector = new Vector2Int(Mathf.RoundToInt(lastHoweredTile.Position.x), Mathf.RoundToInt(lastHoweredTile.Position.y));
+            var pinInPlace = shootedPlayses[normalizedVector.x][normalizedVector.y];
+            if (pinInPlace == null)
+            {
+                currentShoot.ChangePinState(ShootingPin.ShootingPinState.Plasing);
+            }
+            else
+            {
+                currentShoot.ChangePinState(ShootingPin.ShootingPinState.WrongPosition);
+            }
+
+            currentShoot.gameObject.transform.localPosition = new Vector3(normalizedVector.x, 0, -normalizedVector.y);
+
+            if (checkOnly) return;
+
+            if(currentShoot.CurrentState == ShootingPin.ShootingPinState.Plasing)
+            {
+                shootedPlayses[normalizedVector.x][normalizedVector.y] = currentShoot;
+                TileHoverChangedEvent.RemoveAllListeners();
+                gameFieldState = GameFieldState.None;
+                currentShoot = null;
+                playerShootsCallback?.Invoke(new Vector2Int[] { normalizedVector });
+            }
+        }        
+
+        public void ApplyHitResult(IList<ShootResult> results)
+        {
+            for (int i = 0; i < results.Count; i++)
+            {
+                var result = results[i];
+                if(shootedPlayses[result.Position.x][result.Position.y] != null)
+                {
+                    shootedPlayses[result.Position.x][result.Position.y].ChangePinState(result.IsOnTarget == true ? ShootingPin.ShootingPinState.Hit : ShootingPin.ShootingPinState.Miss);
+                    if(result.isDestroyed)
+                    {
+                        for (int pi= 0; pi < result.DestroyedPositionsOfShip.Length; pi++)
+                        {
+                            var destroyedPart = Instantiate(DestrooyedEnemyShipPartIndicator);
+                            destroyedPart.transform.parent = PlaygroundAncor.transform;
+                            destroyedPart.transform.localPosition = new Vector3(result.DestroyedPositionsOfShip[pi].x, 0, -result.DestroyedPositionsOfShip[pi].y);
+                        }
+                    }
+                }
+            }
+        }
+
+        public IList<ShootResult> CheckShoots(IList<Vector2Int> shootingPositions)
+        {
+            var result = new List<ShootResult>();
+
+            for (int i = 0; i < shootingPositions.Count; i++)
+            {
+                var position = shootingPositions[i];
+                var shootResult = new ShootResult() { Position = position, IsOnTarget = false };
+                var shipOnPosition = this.placesOccupiedByShips[position.x][position.y];
+                if (shipOnPosition != null && shipOnPosition.TryTakeDamage(position))
+                {
+                    shootResult.IsOnTarget = true;
+                    if (!shipOnPosition.IsAlive)
+                    {
+                        liveShipOnField--;
+                        shootResult.isDestroyed = true;
+                        shootResult.DestroyedPositionsOfShip = shipOnPosition.GetShipPartsPositions();
+                    }
+                }
+
+                currentShoot = Instantiate(ShootingPinPrefub).GetComponent<ShootingPin>();
+                currentShoot.gameObject.transform.parent = PlaygroundAncor.transform;
+                currentShoot.Position = position;
+                currentShoot.transform.localPosition = new Vector3(currentShoot.Position.x, 0, -currentShoot.Position.y);
+                currentShoot.ChangePinState(ShootingPin.ShootingPinState.Miss);
+                shootedPlayses[position.x][position.y] = currentShoot;
+                if (shootResult.IsOnTarget)
+                {
+                    currentShoot.ChangePinState(ShootingPin.ShootingPinState.Hit);
+                }
+                currentShoot = null;
+                result.Add(shootResult);
+            }
+
+            return result;
+        }
+
+        #endregion
+
+
+        private void ResetPlaces()
         {
             ShipsOnField.Clear();
             for (int row = 0; row < placesOccupiedByShips.Length; row++)
@@ -187,6 +301,18 @@ namespace BattleshipBoardGame
                     placesOccupiedByShips[row][col] = null;
                 }
             }
+
+            for (int row = 0; row < shootedPlayses.Length; row++)
+            {
+                if (shootedPlayses[row] == null)
+                {
+                    shootedPlayses[row] = new ShootingPin[10];
+                }
+                for (int col = 0; col < shootedPlayses.Length; col++)
+                {
+                    shootedPlayses[row][col] = null;
+                }
+            }
         }
 
         public enum GameFieldState
@@ -196,6 +322,16 @@ namespace BattleshipBoardGame
             WaytForShoot,
             WaytForReply,
             EndGame
+        }
+
+        public class ShootResult
+        {
+            public Vector2Int Position { get; set; }
+            public bool IsOnTarget { get; set; }
+
+            public bool isDestroyed { get; set; }
+
+            public Vector2Int[] DestroyedPositionsOfShip { get; set; }
         }
     }
 }

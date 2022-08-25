@@ -121,11 +121,25 @@ namespace BattleshipBoardGame
                 var coordinateShift = ShiftCoordinateToShipPart(i, centerPlace);
                 if(fireCoord == coordinateShift && demagedShipParts[i] == false)
                 {
+                    damageTaked++;
                     result = demagedShipParts[i] = true;
+                    return result;
                 }
             }
 
             return result;
+        }
+
+        public Vector2Int[] GetShipPartsPositions()
+        {
+            var ressult = new Vector2Int[totalSize];
+
+            for (int i = 0; i < totalSize; i++)
+            {
+                ressult[i] = ShiftCoordinateToShipPart(i, centerPlace);
+            }
+
+            return ressult;
         }
 
         public void ResetIndicators()
