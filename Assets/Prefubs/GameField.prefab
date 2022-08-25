@@ -6993,7 +6993,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playgroundTilesRoot: {fileID: 6801368216206079962}
   PlaygroundAncor: {fileID: 6801368217692020441}
-  testShip: {fileID: 0}
+  ShootingPinPrefub: {fileID: 2165634400293703509, guid: 5db5546fdda59e44bad43f34ef30cc8a, type: 3}
+  DestrooyedEnemyShipPartIndicator: {fileID: 7753333619500217442, guid: 9557a222c219dfd42ae695de889624e8, type: 3}
 --- !u!65 &2571218109371385127
 BoxCollider:
   m_ObjectHideFlags: 0
