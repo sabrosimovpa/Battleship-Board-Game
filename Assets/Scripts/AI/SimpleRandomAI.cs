@@ -38,6 +38,8 @@ namespace BattleshipBoardGame.AI
             PlaceNextShip();
         }
 
+        private Vector2Int lastShootPosition;
+
         public void StartShooting()
         {
             var shootedPositions = targitingField.ShootedPlayses;
@@ -95,24 +97,25 @@ namespace BattleshipBoardGame.AI
         {
             var position = oldPosition;
             
-            var var = URandom.Range(0.0f, 4.0f);
-            switch (var)
+            var r = URandom.Range(0.0f, 4.0f);
+            if(r <= 1.0f)
             {
-                case <= 1.0f:
-                    position = position + Vector2Int.up;
-                    break;
-                case <= 2.0f:
-                    position = position + Vector2Int.left;
-                    break;
-                case <= 3.0f:
-                    position = position + Vector2Int.down;
-                    break;
-                case <= 4.0f:
-                    position = position + Vector2Int.right;
-                    break;
-                default:
-                    position = position + Vector2Int.one;
-                    break;
+                position = position + Vector2Int.up;
+            }
+
+
+
+            if (r <= 2.0f && r > 1.0f)
+            {
+                position = position + Vector2Int.right;
+            }
+            if (r <= 3.0f && r > 2.0f)
+            {
+                position = position + Vector2Int.down;
+            }
+            if (r <= 4.0f && r > 3.0f)
+            {
+                position = position + Vector2Int.left;
             }
 
             if (position.x >= 10 || position.x < 0)

@@ -34,11 +34,12 @@ namespace BattleshipBoardGame
 
         private bool isPlayerFire = false;
 
-        private IAI _aI = new SimpleRandomAI();
+        private IAI _aI;
 
         // Start is called before the first frame update
         void Start()
         {
+            _aI = gameObject.AddComponent<SimpleRandomAI>();
             playersShips = Instantiate(gameFieldPrefub).GetComponent<GameFieldManager>();
             playersShips.transform.parent = playerRoot.transform;
             playersShips.transform.localPosition = new Vector3(-7, 0, 0);
@@ -61,7 +62,7 @@ namespace BattleshipBoardGame
 
             userUi.ShowChoseSheepsPanel(true);
             userUi.OnSheepChosen.AddListener(OnUserChoseSheep);
-            _aI.SetubAI(shipsForAI, oponentShips, oponentAttackField);            
+            _aI.SetubAI(shipsForAI, oponentShips, oponentAttackField);
             StartCoroutine(WaitForAllReady());
         }
 
@@ -80,7 +81,7 @@ namespace BattleshipBoardGame
         {
             yield return null;
 
-            while(playsedShips < shipsForAI.Length && !_aI.Ready)
+            while(playsedShips < shipsForAI.Length || !_aI.Ready)
             {
                 yield return new WaitForSeconds(1.0f);
             }
@@ -95,13 +96,17 @@ namespace BattleshipBoardGame
 
         private void PrepareAndStartAttack(bool isUserShoot = true)
         {
-            bool needProside = false;
+            bool needProside = IsneedProside();
 
-            if (!needProside)
+            if (needProside)
             {
                 SetubAttacingPositions(isUserShoot);
                 StartAttack();
             }
+            else
+            {
+                Debug.Log("gameStop");
+            }    
         }
 
         private bool IsneedProside()
@@ -143,7 +148,7 @@ namespace BattleshipBoardGame
             attacingField.StartShooting(EndShooting);
             if (!isPlayerFire)
             {
-                //TODO: AI shoot
+                _aI.StartShooting();
             }            
         }
 
