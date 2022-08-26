@@ -21,6 +21,8 @@ namespace BattleshipBoardGame
 
         public ShootingPinState CurrentState => curState;
 
+        public bool IsShipDestroyed { get; set; }
+
         // Start is called before the first frame update
         void Start()
         {

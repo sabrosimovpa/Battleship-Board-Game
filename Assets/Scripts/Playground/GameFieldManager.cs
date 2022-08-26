@@ -283,6 +283,11 @@ namespace BattleshipBoardGame
                             var destroyedPart = Instantiate(DestrooyedEnemyShipPartIndicator);
                             destroyedPart.transform.parent = PlaygroundAncor.transform;
                             destroyedPart.transform.localPosition = new Vector3(result.DestroyedPositionsOfShip[pi].x, 0, -result.DestroyedPositionsOfShip[pi].y);
+                            var shootingPlase = shootedPlayses[result.DestroyedPositionsOfShip[pi].x][result.DestroyedPositionsOfShip[pi].y];
+                            if(shootingPlase != null)
+                            {
+                                shootingPlase.IsShipDestroyed = true; 
+                            }
                         }
                     }
                 }
@@ -372,7 +377,6 @@ namespace BattleshipBoardGame
             public bool IsOnTarget { get; set; }
 
             public bool isDestroyed { get; set; }
-
             public Vector2Int[] DestroyedPositionsOfShip { get; set; }
         }
     }
