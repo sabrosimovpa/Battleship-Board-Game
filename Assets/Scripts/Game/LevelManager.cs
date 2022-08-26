@@ -1,3 +1,4 @@
+using BattleshipBoardGame.AI;
 using BattleshipBoardGame.UI;
 using System;
 using System.Collections;
@@ -8,10 +9,17 @@ namespace BattleshipBoardGame
 {
     public class LevelManager : MonoBehaviour
     {
-        public GameObject GameFieldPrefub;
-        public GameObject PlayerRoot;
-        public GameObject OponentRoot;
-        public HUD UserUi;
+        [SerializeField]
+        private GameObject gameFieldPrefub;
+        [SerializeField]
+        private GameObject playerRoot;
+        [SerializeField]
+        private GameObject oponentRoot;
+        [SerializeField]
+        private HUD userUi;
+
+        [SerializeField]
+        private GameObject[] shipsForAI;
 
         private GameFieldManager playersShips;
         private GameFieldManager playersAttackField;
@@ -26,31 +34,36 @@ namespace BattleshipBoardGame
 
         private bool isPlayerFire = false;
 
+        private IAI _aI;
+
         // Start is called before the first frame update
         void Start()
         {
-            playersShips = Instantiate(GameFieldPrefub).GetComponent<GameFieldManager>();
-            playersShips.transform.parent = PlayerRoot.transform;
+            _aI = gameObject.AddComponent<SimpleRandomAI>();
+            playersShips = Instantiate(gameFieldPrefub).GetComponent<GameFieldManager>();
+            playersShips.transform.parent = playerRoot.transform;
             playersShips.transform.localPosition = new Vector3(-7, 0, 0);
             playersShips.name = "playersShips_" + playersShips.name;
 
-            playersAttackField = Instantiate(GameFieldPrefub).GetComponent<GameFieldManager>();
-            playersAttackField.transform.parent = PlayerRoot.transform;
+            playersAttackField = Instantiate(gameFieldPrefub).GetComponent<GameFieldManager>();
+            playersAttackField.transform.parent = playerRoot.transform;
             playersAttackField.transform.localPosition = new Vector3(7, 0, 0);
             playersAttackField.name = "playersAttackField" + playersAttackField.name;
 
-            oponentShips = Instantiate(GameFieldPrefub).GetComponent<GameFieldManager>();
-            oponentShips.transform.parent = OponentRoot.transform;
+            oponentShips = Instantiate(gameFieldPrefub).GetComponent<GameFieldManager>();
+            oponentShips.transform.parent = oponentRoot.transform;
             oponentShips.transform.localPosition = new Vector3(-7, 0, 0);
             oponentShips.name = "oponentShips" + oponentShips.name;
 
-            oponentAttackField = Instantiate(GameFieldPrefub).GetComponent<GameFieldManager>();
-            oponentAttackField.transform.parent = OponentRoot.transform;
+            oponentAttackField = Instantiate(gameFieldPrefub).GetComponent<GameFieldManager>();
+            oponentAttackField.transform.parent = oponentRoot.transform;
             oponentAttackField.transform.localPosition = new Vector3(7, 0, 0);
             oponentAttackField.name = "oponentAttackField" + oponentAttackField.name;
 
-            UserUi.ShowChoseSheepsPanel(true);
-            UserUi.OnSheepChosen.AddListener(OnUserChoseSheep);
+            userUi.ShowChoseSheepsPanel(true);
+            userUi.OnSheepChosen.AddListener(OnUserChoseSheep);
+            _aI.SetubAI(shipsForAI, oponentShips, oponentAttackField);
+            StartCoroutine(WaitForAllReady());
         }
 
         private void OnUserChoseSheep(GameObject arg0)
@@ -61,12 +74,19 @@ namespace BattleshipBoardGame
         private void OnPlasingFinish()
         {
             playsedShips++;
-            UserUi.ShipPlaysed();
-            if(playsedShips >= 5)
+            userUi.ShipPlaysed();
+        }
+
+        private IEnumerator WaitForAllReady()
+        {
+            yield return null;
+
+            while(playsedShips < shipsForAI.Length || !_aI.Ready)
             {
-                StartGameSession();
+                yield return new WaitForSeconds(1.0f);
             }
-            
+
+            StartGameSession();
         }
 
         private void StartGameSession()
@@ -76,8 +96,22 @@ namespace BattleshipBoardGame
 
         private void PrepareAndStartAttack(bool isUserShoot = true)
         {
-            SetubAttacingPositions(isUserShoot);
-            StartAttack();
+            bool needProside = IsneedProside();
+
+            if (needProside)
+            {
+                SetubAttacingPositions(isUserShoot);
+                StartAttack();
+            }
+            else
+            {
+                EndGame();
+            }    
+        }
+
+        private bool IsneedProside()
+        {
+            return playersShips.IsEnioneStanding && oponentShips.IsEnioneStanding;
         }
 
         private void SetubAttacingPositions(bool isPlayerFire)
@@ -86,7 +120,7 @@ namespace BattleshipBoardGame
             if(isPlayerFire)
             {
                 attacingField = playersAttackField;
-                attacedField = playersShips;
+                attacedField = oponentShips;
             }
             else
             {
@@ -98,13 +132,22 @@ namespace BattleshipBoardGame
         private void StartAttack()
         {
             attacingField.StartShooting(EndShooting);
+            if (!isPlayerFire)
+            {
+                _aI.StartShooting();
+            }            
         }
 
         private void EndShooting(Vector2Int[] shoots)
         {
             var results = attacedField.CheckShoots(shoots);
             attacingField.ApplyHitResult(results);
-            PrepareAndStartAttack(); //TEST purpose
+            PrepareAndStartAttack(!isPlayerFire);
+        }
+
+        private void EndGame()
+        {
+            userUi.EndGame(playersShips.IsEnioneStanding);
         }
 
         // Update is called once per frame

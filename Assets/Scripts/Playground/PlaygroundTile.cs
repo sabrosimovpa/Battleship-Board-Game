@@ -7,14 +7,14 @@ namespace BattleshipBoardGame
 {
     public class PlaygroundTile : MonoBehaviour
     {
-        public Vector2 Position;
+        public Vector2Int Position;
 
         public UnityEvent<PlaygroundTile, TileEventType> TileMouseEvent = new UnityEvent<PlaygroundTile, TileEventType>();
 
         // Start is called before the first frame update
         void Start()
         {
-            Position = new Vector2(gameObject.transform.localPosition.x, -gameObject.transform.localPosition.z);
+            Position = new Vector2Int(Mathf.RoundToInt(gameObject.transform.localPosition.x), Mathf.RoundToInt(-gameObject.transform.localPosition.z));
         }
 
         // Update is called once per frame
