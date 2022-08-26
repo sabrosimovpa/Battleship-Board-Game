@@ -1,20 +1,13 @@
 using BattleshipBoardGame.UI.Base;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BattleshipBoardGame.UI
 {
-    public class MainMenu : BaseMenuItem
+    public class TutorialMenu : BaseMenuItem
     {
-        [SerializeField]
-        private Button startGameButton;
-
-        [SerializeField]
-        private Button Tutorial;
-
+        
         // Start is called before the first frame update
         void Start()
         {
@@ -30,17 +23,11 @@ namespace BattleshipBoardGame.UI
         public override void OnMenuLoad()
         {
             gameObject.SetActive(true);
-            startGameButton.onClick.AddListener(OnStartGameButton);
         }
 
         public override void OnMenuUnload()
         {
             gameObject.SetActive(false);
-        }
-
-        private void OnStartGameButton()
-        {
-            GameManager.instance.StartGameScene();
         }
     }
 }
