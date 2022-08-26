@@ -11,6 +11,9 @@ namespace BattleshipBoardGame.UI
         [SerializeField]
         private Transform choseSheepsPanel;
 
+        [SerializeField]
+        private WinLoseUI winLoseUi;
+
         public UnityEvent<GameObject> OnSheepChosen = new UnityEvent<GameObject>();
 
         private Button lastStartedButton;
@@ -18,7 +21,7 @@ namespace BattleshipBoardGame.UI
         // Start is called before the first frame update
         void Start()
         {
-        
+            winLoseUi.gameObject.SetActive(false);
         }
 
 
@@ -26,6 +29,7 @@ namespace BattleshipBoardGame.UI
         {
             lastStartedButton = null;
         }
+
         public void ShipSelected(Button button, GameObject ship)
         {
             if(lastStartedButton != null)
@@ -41,6 +45,11 @@ namespace BattleshipBoardGame.UI
         public void ShowChoseSheepsPanel(bool show)
         {
             choseSheepsPanel.gameObject.SetActive(show);
+        }
+
+        public void EndGame(bool isPlayerWin)
+        {
+            winLoseUi.ShowEndGameUI(isPlayerWin);
         }
     }
 }

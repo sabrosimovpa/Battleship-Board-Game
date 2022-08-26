@@ -105,27 +105,13 @@ namespace BattleshipBoardGame
             }
             else
             {
-                Debug.Log("gameStop");
+                EndGame();
             }    
         }
 
         private bool IsneedProside()
         {
-            var result = true;
-
-            if(!playersShips.IsEnioneStanding)
-            {
-                Debug.Log("PlayerLose");
-                result = false;
-            }
-
-            if(!oponentShips.IsEnioneStanding)
-            {
-                Debug.Log("AI lose");
-                result = false;
-            }
-
-            return result;
+            return playersShips.IsEnioneStanding && oponentShips.IsEnioneStanding;
         }
 
         private void SetubAttacingPositions(bool isPlayerFire)
@@ -157,6 +143,11 @@ namespace BattleshipBoardGame
             var results = attacedField.CheckShoots(shoots);
             attacingField.ApplyHitResult(results);
             PrepareAndStartAttack(!isPlayerFire);
+        }
+
+        private void EndGame()
+        {
+            userUi.EndGame(playersShips.IsEnioneStanding);
         }
 
         // Update is called once per frame
