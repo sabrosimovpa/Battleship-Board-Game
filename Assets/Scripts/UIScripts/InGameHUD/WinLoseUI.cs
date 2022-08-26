@@ -8,16 +8,15 @@ namespace BattleshipBoardGame.UI
     public class WinLoseUI : MonoBehaviour
     {
         [SerializeField]
-        private GameObject loseImage;
+        private GameObject _loseImage;
         [SerializeField]
-        private GameObject winImage;
+        private GameObject _winImage;
         [SerializeField]
-        private GameObject pauseImage;
+        private GameObject _pauseImage;
+        [SerializeField]
+        private GameObject _continueButton;
 
-        [SerializeField]
-        private GameObject continueButton;
-
-        public bool IsOnPause => pauseImage.gameObject.activeSelf;
+        public bool IsOnPause => _pauseImage.gameObject.activeSelf;
 
         // Start is called before the first frame update
         void Start()
@@ -33,20 +32,20 @@ namespace BattleshipBoardGame.UI
 
         public void ShowEndGameUI(bool isPlayerWin)
         {
-            continueButton.SetActive(false);
-            pauseImage.SetActive(false);
-            loseImage.SetActive(!isPlayerWin);
-            winImage.SetActive(isPlayerWin);
+            _continueButton.SetActive(false);
+            _pauseImage.SetActive(false);
+            _loseImage.SetActive(!isPlayerWin);
+            _winImage.SetActive(isPlayerWin);
             gameObject.SetActive(true);
             
         }
 
         public void PauseMenu(bool show)
         {
-            continueButton.SetActive(true);
-            pauseImage.SetActive(show);
-            loseImage.SetActive(false);
-            winImage.SetActive(false);
+            _continueButton.SetActive(true);
+            _pauseImage.SetActive(show);
+            _loseImage.SetActive(false);
+            _winImage.SetActive(false);
             gameObject.SetActive(show);
         }
 

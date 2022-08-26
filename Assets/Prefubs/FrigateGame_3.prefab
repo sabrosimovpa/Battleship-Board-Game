@@ -78,14 +78,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0891aabbbccee7943bca8170d05c0bd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipRoot: {fileID: 753204522558781765}
-  totalSize: 3
-  sizeFromCenterToNose: 1
-  sizeFromCenterToBack: 1
-  WrongPlaysmentIndicators:
+  _shipRoot: {fileID: 753204522558781765}
+  _totalSize: 3
+  _sizeFromCenterToNose: 1
+  _wrongPlaysmentIndicators:
   - {fileID: 4595371267898451858}
   - {fileID: 4595371269154996554}
   - {fileID: 4595371268155494518}
+  demagedShipParts: 
+  damageTaked: 0
 --- !u!1 &4595371267898451858
 GameObject:
   m_ObjectHideFlags: 0

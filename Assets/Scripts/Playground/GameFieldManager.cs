@@ -10,14 +10,14 @@ namespace BattleshipBoardGame
     {
 
         [SerializeField]
-        private GameObject playgroundTilesRoot;
+        private GameObject _playgroundTilesRoot;
         [SerializeField]
-        private GameObject PlaygroundAncor;
+        private GameObject _playgroundAncor;
         [SerializeField]
-        private GameObject ShootingPinPrefub;
+        private GameObject _shootingPinPrefub;
 
         [SerializeField]
-        private GameObject DestrooyedEnemyShipPartIndicator;
+        private GameObject _destrooyedEnemyShipPartIndicator;
 
         private GameObject playsingShip;
 
@@ -41,7 +41,7 @@ namespace BattleshipBoardGame
         void Start()
         {
             ResetPlaces();
-            var tiles = playgroundTilesRoot.GetComponentsInChildren<PlaygroundTile>();
+            var tiles = _playgroundTilesRoot.GetComponentsInChildren<PlaygroundTile>();
 
             for (int i = 0; i < tiles.Length; i++)
             {
@@ -149,7 +149,7 @@ namespace BattleshipBoardGame
                 playsingShip = null;
             }
             playsingShip = Instantiate(shipPrefub);
-            playsingShip.transform.parent = PlaygroundAncor.transform;
+            playsingShip.transform.parent = _playgroundAncor.transform;
             playsingShip.transform.localPosition = new Vector3(10, 0.1f, -4);
             TileHoverChangedEvent.RemoveAllListeners();
             TileHoverChangedEvent.AddListener(SignalFitOnPositionChanged);
@@ -221,8 +221,8 @@ namespace BattleshipBoardGame
                 currentShoot = null;
             }
 
-            currentShoot = Instantiate(ShootingPinPrefub).GetComponent<ShootingPin>();
-            currentShoot.gameObject.transform.parent = PlaygroundAncor.transform;
+            currentShoot = Instantiate(_shootingPinPrefub).GetComponent<ShootingPin>();
+            currentShoot.gameObject.transform.parent = _playgroundAncor.transform;
             currentShoot.transform.localPosition = new Vector3(10, 0, -4);
             TileHoverChangedEvent.RemoveAllListeners();
             TileHoverChangedEvent.AddListener(ShootTraker);
@@ -280,8 +280,8 @@ namespace BattleshipBoardGame
                     {
                         for (int pi= 0; pi < result.DestroyedPositionsOfShip.Length; pi++)
                         {
-                            var destroyedPart = Instantiate(DestrooyedEnemyShipPartIndicator);
-                            destroyedPart.transform.parent = PlaygroundAncor.transform;
+                            var destroyedPart = Instantiate(_destrooyedEnemyShipPartIndicator);
+                            destroyedPart.transform.parent = _playgroundAncor.transform;
                             destroyedPart.transform.localPosition = new Vector3(result.DestroyedPositionsOfShip[pi].x, 0, -result.DestroyedPositionsOfShip[pi].y);
                         }
                     }
@@ -309,8 +309,8 @@ namespace BattleshipBoardGame
                     }
                 }
 
-                currentShoot = Instantiate(ShootingPinPrefub).GetComponent<ShootingPin>();
-                currentShoot.gameObject.transform.parent = PlaygroundAncor.transform;
+                currentShoot = Instantiate(_shootingPinPrefub).GetComponent<ShootingPin>();
+                currentShoot.gameObject.transform.parent = _playgroundAncor.transform;
                 currentShoot.Position = position;
                 currentShoot.transform.localPosition = new Vector3(currentShoot.Position.x, 0, -currentShoot.Position.y);
                 currentShoot.ChangePinState(ShootingPin.ShootingPinState.Miss);

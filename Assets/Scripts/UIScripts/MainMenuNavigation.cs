@@ -8,21 +8,21 @@ namespace BattleshipBoardGame.UI
     public class MainMenuNavigation : MonoBehaviour
     {
         [SerializeField]
-        private BaseMenuItem startMenu;
+        private BaseMenuItem _startMenu;
         [SerializeField]
-        private BaseMenuItem[] menuObjects;
+        private BaseMenuItem[] _menuObjects;
 
         private Stack<BaseMenuItem> _navigationStack = new Stack<BaseMenuItem>();
 
         // Start is called before the first frame update
         void Start()
         {
-            for (int i = 0; i < menuObjects.Length; i++)
+            for (int i = 0; i < _menuObjects.Length; i++)
             {
-                menuObjects[i].gameObject.SetActive(false);
+                _menuObjects[i].gameObject.SetActive(false);
             }
 
-            NavigateTo(startMenu);
+            NavigateTo(_startMenu);
         }
 
         public void NavigateTo(BaseMenuItem newMenuObject)
@@ -59,7 +59,7 @@ namespace BattleshipBoardGame.UI
 
             _navigationStack.Clear();
 #if UNITY_EDITOR
-            NavigateTo(startMenu);
+            NavigateTo(_startMenu);
 #endif
             GameManager.instance.ExitGame();
         }

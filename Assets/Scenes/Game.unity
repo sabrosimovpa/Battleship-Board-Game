@@ -357,7 +357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523e2ed0c5b018047913100ffa98b60d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 4595371267421936909, guid: c9aa963ac479cd6439d073904a5715ab, type: 3}
+  _ship: {fileID: 4595371267421936909, guid: c9aa963ac479cd6439d073904a5715ab, type: 3}
   ShipSelectedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -538,8 +538,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d386b52c9de7c488d08065e51926bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  choseSheepsPanel: {fileID: 1719693067}
-  winLoseUi: {fileID: 1649075233}
+  _choseSheepsPanel: {fileID: 1719693067}
+  _winLoseUi: {fileID: 1649075233}
   OnSheepChosen:
     m_PersistentCalls:
       m_Calls: []
@@ -2007,11 +2007,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f588134d764b62c4cb125ff55313f5dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameFieldPrefub: {fileID: 6801368217362129544, guid: 77aa7cdd5a154404d842f1f92493151a, type: 3}
-  playerRoot: {fileID: 239371541}
-  oponentRoot: {fileID: 1249633226}
-  userUi: {fileID: 160922622}
-  shipsForAI:
+  _gameFieldPrefub: {fileID: 6801368217362129544, guid: 77aa7cdd5a154404d842f1f92493151a, type: 3}
+  _playerRoot: {fileID: 239371541}
+  _oponentRoot: {fileID: 1249633226}
+  _userUi: {fileID: 160922622}
+  _shipsForAI:
   - {fileID: 3493695082014563345, guid: 5dd31d5cc3d6d724e9c4df68c0fe8a9a, type: 3}
   - {fileID: 3803519846715292441, guid: c386a3d0c3f46c94c8788e534d144326, type: 3}
   - {fileID: 3710010469076070931, guid: 7595903add028eb4eb03943ea2cbe478, type: 3}
@@ -2151,7 +2151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523e2ed0c5b018047913100ffa98b60d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 3493695082014563345, guid: 5dd31d5cc3d6d724e9c4df68c0fe8a9a, type: 3}
+  _ship: {fileID: 3493695082014563345, guid: 5dd31d5cc3d6d724e9c4df68c0fe8a9a, type: 3}
   ShipSelectedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -2301,7 +2301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523e2ed0c5b018047913100ffa98b60d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 4859248838909385748, guid: 1c022e8b61cc94c4bb765e6194d34327, type: 3}
+  _ship: {fileID: 4859248838909385748, guid: 1c022e8b61cc94c4bb765e6194d34327, type: 3}
   ShipSelectedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -2585,7 +2585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523e2ed0c5b018047913100ffa98b60d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 3803519846715292441, guid: c386a3d0c3f46c94c8788e534d144326, type: 3}
+  _ship: {fileID: 3803519846715292441, guid: c386a3d0c3f46c94c8788e534d144326, type: 3}
   ShipSelectedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -3115,10 +3115,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16773a39585b032428505b8861526c2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loseImage: {fileID: 1763350633}
-  winImage: {fileID: 2053580754}
-  pauseImage: {fileID: 117094485}
-  continueButton: {fileID: 377128155}
+  _loseImage: {fileID: 1763350633}
+  _winImage: {fileID: 2053580754}
+  _pauseImage: {fileID: 117094485}
+  _continueButton: {fileID: 377128155}
 --- !u!1 &1719693066
 GameObject:
   m_ObjectHideFlags: 0
@@ -3641,7 +3641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 523e2ed0c5b018047913100ffa98b60d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 3710010469076070931, guid: 7595903add028eb4eb03943ea2cbe478, type: 3}
+  _ship: {fileID: 3710010469076070931, guid: 7595903add028eb4eb03943ea2cbe478, type: 3}
   ShipSelectedEvent:
     m_PersistentCalls:
       m_Calls:
@@ -4030,7 +4030,7 @@ GameObject:
   - component: {fileID: 2053580757}
   - component: {fileID: 2053580756}
   m_Layer: 5
-  m_Name: PlayerWinn
+  m_Name: PlayerWin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
