@@ -61,7 +61,7 @@ namespace BattleshipBoardGame
         void Update()
         {
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonUp(0))
             {
                 if (!CanDoInputAction()) return;
                 
@@ -82,7 +82,7 @@ namespace BattleshipBoardGame
                 }
             }
 
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonUp(1))
             {
                 if (!CanDoInputAction()) return;
 
@@ -117,6 +117,24 @@ namespace BattleshipBoardGame
 
             return result;
         }
+
+        private GameFieldState prePauseState = GameFieldState.None;
+
+        public void Pause(bool isPaused)
+        {
+            if(isPaused && gameFieldState != GameFieldState.None)
+            {
+                prePauseState = this.gameFieldState;
+                this.gameFieldState = GameFieldState.None;
+            }
+
+            if(!isPaused && prePauseState != GameFieldState.None && prePauseState != gameFieldState)
+            {
+                gameFieldState = prePauseState;
+                prePauseState = GameFieldState.None;
+            }
+        }
+
         #region plaseShipOnField
         private Action onPlaysingFinished;
 
@@ -139,6 +157,7 @@ namespace BattleshipBoardGame
 
         private void SignalFitOnPositionChanged(Vector2Int tilePosition)
         {
+            if (gameFieldState == GameFieldState.None) return;
             lastHoweredTilePosition = tilePosition;
             playsingShip.GetComponent<ShipScript>().IsShipFitt(placesOccupiedByShips, lastHoweredTilePosition);
             playsingShip.transform.localPosition = new Vector3(lastHoweredTilePosition.x, 0.1f, -lastHoweredTilePosition.y);
@@ -212,6 +231,7 @@ namespace BattleshipBoardGame
 
         private void ShootTraker(Vector2Int hoveredTile)
         {
+            if (gameFieldState == GameFieldState.None) return;
             lastHoweredTilePosition = hoveredTile;
             PlaceShoot(true);
         }

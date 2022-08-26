@@ -15,6 +15,7 @@ namespace BattleshipBoardGame.UI
         private WinLoseUI winLoseUi;
 
         public UnityEvent<GameObject> OnSheepChosen = new UnityEvent<GameObject>();
+        public UnityEvent<bool> PauseEvent = new UnityEvent<bool>();
 
         private Button lastStartedButton;
 
@@ -24,7 +25,13 @@ namespace BattleshipBoardGame.UI
             winLoseUi.gameObject.SetActive(false);
         }
 
-
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                SwichPauseState();
+            }
+        }
         public void ShipPlaysed()
         {
             lastStartedButton = null;
@@ -50,6 +57,12 @@ namespace BattleshipBoardGame.UI
         public void EndGame(bool isPlayerWin)
         {
             winLoseUi.ShowEndGameUI(isPlayerWin);
+        }
+
+        public void SwichPauseState()
+        {
+            winLoseUi.PauseMenu(!winLoseUi.IsOnPause);
+            PauseEvent?.Invoke(winLoseUi.IsOnPause);
         }
     }
 }

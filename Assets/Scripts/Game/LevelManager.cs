@@ -62,8 +62,19 @@ namespace BattleshipBoardGame
 
             userUi.ShowChoseSheepsPanel(true);
             userUi.OnSheepChosen.AddListener(OnUserChoseSheep);
+            userUi.PauseEvent.RemoveAllListeners();
+            userUi.PauseEvent.AddListener(OnPause);
             _aI.SetubAI(shipsForAI, oponentShips, oponentAttackField);
             StartCoroutine(WaitForAllReady());
+        }
+
+        private void OnPause(bool isOnPause)
+        {
+            playersShips.Pause(isOnPause);
+            playersAttackField.Pause(isOnPause);
+
+            oponentShips.Pause(isOnPause);
+            oponentAttackField.Pause(isOnPause);
         }
 
         private void OnUserChoseSheep(GameObject arg0)
