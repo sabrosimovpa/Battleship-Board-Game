@@ -6953,7 +6953,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6801368217362129551}
   - component: {fileID: 6801368217362129550}
-  - component: {fileID: 2571218109371385127}
+  - component: {fileID: -5056902986300205840}
   m_Layer: 0
   m_Name: GameField
   m_TagString: Untagged
@@ -6995,19 +6995,18 @@ MonoBehaviour:
   PlaygroundAncor: {fileID: 6801368217692020441}
   ShootingPinPrefub: {fileID: 2165634400293703509, guid: 5db5546fdda59e44bad43f34ef30cc8a, type: 3}
   DestrooyedEnemyShipPartIndicator: {fileID: 7753333619500217442, guid: 9557a222c219dfd42ae695de889624e8, type: 3}
---- !u!65 &2571218109371385127
-BoxCollider:
+--- !u!114 &-5056902986300205840
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6801368217362129544}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 10, y: 0.5, z: 10}
-  m_Center: {x: 0, y: -0.54, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 329bd9794dcd9ae4ebe328c3e2661dba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6801368217365336244
 GameObject:
   m_ObjectHideFlags: 0
