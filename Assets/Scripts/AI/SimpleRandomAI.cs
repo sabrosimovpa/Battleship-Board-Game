@@ -8,15 +8,15 @@ namespace BattleshipBoardGame.AI
 {
     public class SimpleRandomAI : MonoBehaviour, IAI
     {
-        private GameFieldManager shipsField;
-        private GameFieldManager targitingField;
+        private GameFieldManager _shipsField;
+        private GameFieldManager _targitingField;
 
-        private GameObject[] ships;
-        private int playsedShips = 0;
+        private GameObject[] _ships;
+        private int _playsedShips = 0;
 
-        private bool ready;
+        private bool _ready;
 
-        public bool Ready => ready;
+        public bool Ready => _ready;
 
         private UnityEngine.Events.UnityEvent<bool> aIReadyToFight = new UnityEngine.Events.UnityEvent<bool>();
 
@@ -26,15 +26,15 @@ namespace BattleshipBoardGame.AI
         {
             get
             {
-                return shipsField != null && shipsField.isActiveAndEnabled;
+                return _shipsField != null && _shipsField.isActiveAndEnabled;
             }
         }
 
         public void SetubAI(GameObject[] newShips, GameFieldManager shipsField, GameFieldManager targetingField)
         {
-            ships = newShips;
-            this.shipsField = shipsField;
-            this.targitingField = targetingField;
+            _ships = newShips;
+            this._shipsField = shipsField;
+            this._targitingField = targetingField;
             PlaceNextShip();
         }
 
@@ -42,14 +42,14 @@ namespace BattleshipBoardGame.AI
 
         public void StartShooting()
         {
-            var shootedPositions = targitingField.ShootedPlayses;
+            var shootedPositions = _targitingField.ShootedPlayses;
             var position = new Vector2Int(URandom.Range(0, 10), URandom.Range(0, 10));
             while (!IsFreePosotion(shootedPositions, position))
             {
                 position = ShiftRandomPosition(position);
             }
 
-            targitingField.PlaceShootOn(position);
+            _targitingField.PlaceShootOn(position);
         }
 
         private bool IsFreePosotion(ShootingPin[][] pinsMap, Vector2Int position)
@@ -66,31 +66,31 @@ namespace BattleshipBoardGame.AI
         {
             yield return null;
 
-            playsedShips++;
-            if (playsedShips <= ships.Length)
+            _playsedShips++;
+            if (_playsedShips <= _ships.Length)
             {
-                shipsField.StartShipPlasing(ships[playsedShips - 1], PlaceNextShip);
+                _shipsField.StartShipPlasing(_ships[_playsedShips - 1], PlaceNextShip);
             }
             else
             {
-                ready = true;
-                aIReadyToFight?.Invoke(ready);
+                _ready = true;
+                aIReadyToFight?.Invoke(_ready);
                 yield break;
             }
 
             yield return null;
             var position = new Vector2Int(URandom.Range(0, 10), URandom.Range(0, 10));
-            while (!shipsField.TryToFitShipOnPosition(position))
+            while (!_shipsField.TryToFitShipOnPosition(position))
             {
                 if (URandom.Range(0.0f, 2.0f) > 1.0f)
                 {
-                    shipsField.RotatePlaysingShip();
+                    _shipsField.RotatePlaysingShip();
                 }
 
                 position = ShiftRandomPosition(position);
             }
 
-            shipsField.PlaceShipOnLastPlace();
+            _shipsField.PlaceShipOnLastPlace();
         }
 
         private Vector2Int ShiftRandomPosition(Vector2Int oldPosition)

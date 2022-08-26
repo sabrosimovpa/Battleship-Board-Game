@@ -9,10 +9,10 @@ namespace BattleshipBoardGame.UI
     public class HUD : MonoBehaviour
     {
         [SerializeField]
-        private Transform choseSheepsPanel;
+        private Transform _choseSheepsPanel;
 
         [SerializeField]
-        private WinLoseUI winLoseUi;
+        private WinLoseUI _winLoseUi;
 
         public UnityEvent<GameObject> OnSheepChosen = new UnityEvent<GameObject>();
         public UnityEvent<bool> PauseEvent = new UnityEvent<bool>();
@@ -22,7 +22,7 @@ namespace BattleshipBoardGame.UI
         // Start is called before the first frame update
         void Start()
         {
-            winLoseUi.gameObject.SetActive(false);
+            _winLoseUi.gameObject.SetActive(false);
         }
 
         private void Update()
@@ -51,18 +51,18 @@ namespace BattleshipBoardGame.UI
 
         public void ShowChoseSheepsPanel(bool show)
         {
-            choseSheepsPanel.gameObject.SetActive(show);
+            _choseSheepsPanel.gameObject.SetActive(show);
         }
 
         public void EndGame(bool isPlayerWin)
         {
-            winLoseUi.ShowEndGameUI(isPlayerWin);
+            _winLoseUi.ShowEndGameUI(isPlayerWin);
         }
 
         public void SwichPauseState()
         {
-            winLoseUi.PauseMenu(!winLoseUi.IsOnPause);
-            PauseEvent?.Invoke(winLoseUi.IsOnPause);
+            _winLoseUi.PauseMenu(!_winLoseUi.IsOnPause);
+            PauseEvent?.Invoke(_winLoseUi.IsOnPause);
         }
     }
 }

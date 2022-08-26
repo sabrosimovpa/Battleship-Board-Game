@@ -239,10 +239,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e61fa1595c10c9c41ba9331950b86bf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HitPin: {fileID: 2165634399074179275}
-  MissPin: {fileID: 2165634400961191100}
-  PlacePin: {fileID: 2165634400922353844}
-  WrongPosition: {fileID: 2165634399234920505}
+  _hitPin: {fileID: 2165634399074179275}
+  _MissPin: {fileID: 2165634400961191100}
+  _placePin: {fileID: 2165634400922353844}
+  _wrongPosition: {fileID: 2165634399234920505}
 --- !u!1 &2165634400922353844
 GameObject:
   m_ObjectHideFlags: 0

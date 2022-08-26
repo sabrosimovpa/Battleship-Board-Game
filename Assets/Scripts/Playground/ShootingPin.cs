@@ -7,13 +7,13 @@ namespace BattleshipBoardGame
     public class ShootingPin : MonoBehaviour
     {
         [SerializeField]
-        private GameObject HitPin;
+        private GameObject _hitPin;
         [SerializeField]
-        private GameObject MissPin;
+        private GameObject _MissPin;
         [SerializeField]
-        private GameObject PlacePin;
+        private GameObject _placePin;
         [SerializeField]
-        private GameObject WrongPosition;
+        private GameObject _wrongPosition;
 
         private ShootingPinState curState;
 
@@ -31,24 +31,24 @@ namespace BattleshipBoardGame
         {
             curState = newState;
 
-            HitPin.SetActive(false);
-            MissPin.SetActive(false);
-            PlacePin.SetActive(false);
-            WrongPosition.SetActive(false);
+            _hitPin.SetActive(false);
+            _MissPin.SetActive(false);
+            _placePin.SetActive(false);
+            _wrongPosition.SetActive(false);
 
             switch (curState)
             {                
                 case ShootingPinState.Hit:
-                    HitPin.SetActive(true);
+                    _hitPin.SetActive(true);
                     break;
                 case ShootingPinState.Miss:
-                    MissPin.SetActive(true);
+                    _MissPin.SetActive(true);
                     break;
                 case ShootingPinState.Plasing:
-                    PlacePin.SetActive(true);
+                    _placePin.SetActive(true);
                     break;
                 case ShootingPinState.WrongPosition:
-                    WrongPosition.SetActive(true);
+                    _wrongPosition.SetActive(true);
                     break;
 
                 default:

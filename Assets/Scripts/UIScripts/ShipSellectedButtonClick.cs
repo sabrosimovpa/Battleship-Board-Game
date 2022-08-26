@@ -10,7 +10,7 @@ namespace BattleshipBoardGame
     public class ShipSellectedButtonClick : MonoBehaviour
     {
         [SerializeField]
-        private GameObject ship;
+        private GameObject _ship;
         [SerializeField]
         private UnityEngine.Events.UnityEvent<Button, GameObject> ShipSelectedEvent;
 
@@ -24,7 +24,7 @@ namespace BattleshipBoardGame
 
         private void OnButtoClick()
         {
-            ShipSelectedEvent?.Invoke(button, ship);
+            ShipSelectedEvent?.Invoke(button, _ship);
         }
 
         // Update is called once per frame

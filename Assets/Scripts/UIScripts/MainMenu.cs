@@ -10,10 +10,7 @@ namespace BattleshipBoardGame.UI
     public class MainMenu : BaseMenuItem
     {
         [SerializeField]
-        private Button startGameButton;
-
-        [SerializeField]
-        private Button Tutorial;
+        private Button _startGameButton;
 
         // Start is called before the first frame update
         void Start()
@@ -30,7 +27,7 @@ namespace BattleshipBoardGame.UI
         public override void OnMenuLoad()
         {
             gameObject.SetActive(true);
-            startGameButton.onClick.AddListener(OnStartGameButton);
+            _startGameButton.onClick.AddListener(OnStartGameButton);
         }
 
         public override void OnMenuUnload()

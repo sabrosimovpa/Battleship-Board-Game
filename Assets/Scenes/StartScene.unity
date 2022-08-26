@@ -495,8 +495,8 @@ MonoBehaviour:
     left field is for placing ships, the right field is for marking targets.The green
     dot indicates where you are aiming, white are misses, red are hits.
 
-    To
-    shoot, aim and press the left mouse button.'
+    To shoot,
+    aim and press the left mouse button.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -784,8 +784,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a4c903519773d4ab91678bd140dc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMenu: {fileID: 1748765073}
-  menuObjects:
+  _startMenu: {fileID: 1748765073}
+  _menuObjects:
   - {fileID: 1748765073}
   - {fileID: 301647113}
 --- !u!1 &186463716
@@ -3133,8 +3133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e86fee5696b9ec744a291bfa164a224b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startGameButton: {fileID: 112181780}
-  Tutorial: {fileID: 0}
+  _startGameButton: {fileID: 112181780}
 --- !u!1 &1774374359
 GameObject:
   m_ObjectHideFlags: 0
